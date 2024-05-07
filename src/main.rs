@@ -43,17 +43,21 @@ fn parse(instructions: String) {
         }
         inst_ptr += 1
     }
+}
 
-    fn jump(dir: bool, ptr: &i32, inst: &Vec<u8>) {
-        let mut d: i32 = 0;
-
-        let other= if dir {']'} else {'['};
-
-        loop {
-            match (inst[ptr] as char, d) {
-                (other, 0) => //,
-
-            }
-        }
+fn jump(ptr: &i32, inst: &Vec<u8>) {
+    if inst[*ptr as usize] as char == '[' {
+        *ptr + inst
+            .iter()
+            .skip((ptr - 1) as usize)
+            .fold((0, 0), |acc, el| match *el as char {
+                '[' => (acc.0 + 1, acc.1 + 1),
+                ']' if acc.1 == 0 => (acc.0 + 1, acc.1),
+                ']' => (acc.0 + 1, acc.1 - 1),
+                _ => acc,
+            })
+            .0;
+    } else {
+        todo!()
     }
 }
