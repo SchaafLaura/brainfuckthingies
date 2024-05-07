@@ -9,7 +9,7 @@ fn main(){
         println!("no instructions found");
         return;
     }
-
+    // this is a comment
     for (i, c) in instructions.chars().enumerate() {
         println!("{}, {}", i, c);
     }
