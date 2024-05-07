@@ -50,14 +50,13 @@ fn jump(ptr: &i32, inst: &Vec<u8>) {
         *ptr + inst
             .iter()
             .skip((ptr - 1) as usize)
-            .fold((0, 0), |acc, el| match *el as char {
-                '[' => (acc.0 + 1, acc.1 + 1),
-                ']' if acc.1 == 0 => (acc.0 + 1, acc.1),
-                ']' => (acc.0 + 1, acc.1 - 1),
-                _ => acc,
+            .fold((0, 0), |(inc, depth), el| match *el as char {
+                '[' => (inc + 1, depth + 1),
+                ']' if depth == 0 => (inc + 1, depth),
+                ']' => (inc + 1, depth - 1),
+                _ => (inc, depth),
             })
             .0;
     } else {
-        todo!()
     }
 }
