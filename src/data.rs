@@ -1,4 +1,4 @@
-use std::ops::{AddAssign, SubAssign, ShlAssign, ShrAssign};
+use std::ops::{AddAssign, ShlAssign, ShrAssign, SubAssign};
 
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Data {
@@ -12,6 +12,12 @@ impl Data {
             pointer: 0,
             data: vec![0; 30_000],
         }
+    }
+}
+
+impl std::fmt::Display for Data {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.data[self.pointer as usize])
     }
 }
 
