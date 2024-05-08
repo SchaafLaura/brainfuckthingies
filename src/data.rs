@@ -17,7 +17,7 @@ impl Data {
 
 impl std::fmt::Display for Data {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.data[self.pointer as usize])
+        write!(f, "{}", self.data[self.pointer as usize] as char)
     }
 }
 
