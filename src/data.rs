@@ -17,6 +17,10 @@ impl Data {
     pub(crate) fn get(&self) -> u8 {
         self.data[self.pointer]
     }
+
+    pub(crate) fn set(&mut self, rhs: u8) {
+        self.data[self.pointer] = rhs;
+    }
 }
 
 impl std::fmt::Display for Data {

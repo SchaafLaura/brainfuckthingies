@@ -26,7 +26,17 @@ fn parse(instructions: String) {
             '>' => data >>= 1,
             '<' => data <<= 1,
             '.' => print!("{}", data),
-            ',' => todo!(), // read user input
+            ',' => {
+                use std::io::Read;
+                let input = std::io::stdin()
+                    .bytes()
+                    .next()
+                    .and_then(|r| r.ok());
+
+                if let Some(b) = input {
+                    data.set(b);
+                }
+            },
             '[' => {
                 if data == 0 {
                     jump(true, &mut inst_ptr, &inst)
