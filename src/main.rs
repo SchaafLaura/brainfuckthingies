@@ -27,36 +27,59 @@ fn parse(instructions: String) {
     let mut data_ptr: usize = 0;
     let mut inst_ptr: usize = 0;
 
-    let isnt: Vec<u8> = instructions.chars().map(|x| x as u8).collect();
+    let inst: Vec<u8> = instructions.chars().map(|x| x as u8).collect();
 
     while inst_ptr < instructions.len() {
-        match isnt[inst_ptr] as char {
+        match inst[inst_ptr] as char {
             '+' => data[data_ptr] += 1,
             '-' => data[data_ptr] -= 1,
             '>' => data_ptr += 1,
             '<' => data_ptr -= 1,
             '.' => print!("{}", data[data_ptr] as char),
             ',' => todo!(), // read user input
-            '[' => jump(true),
-            ']' => jump(false),
+            '[' => {
+                if data[data_ptr] == 0 {
+                    jump(true, &mut inst_ptr, &inst)
+                }
+            }
+            ']' => {
+                if data[data_ptr] != 0 {
+                    jump(false, &mut inst_ptr, &inst)
+                }
+            }
             _ => todo!(),
         }
         inst_ptr += 1
     }
 }
 
-fn jump(ptr: &i32, inst: &Vec<u8>) {
-    if inst[*ptr as usize] as char == '[' {
-        *ptr + inst
-            .iter()
-            .skip((ptr - 1) as usize)
-            .fold((0, 0), |(inc, depth), el| match *el as char {
-                '[' => (inc + 1, depth + 1),
-                ']' if depth == 0 => (inc + 1, depth),
-                ']' => (inc + 1, depth - 1),
-                _ => (inc, depth),
-            })
-            .0;
-    } else {
+fn jump(dir: bool, ptr: &mut usize, inst: &Vec<u8>) {
+    let brace = (if dir { '[' } else { ']' }) as u8;
+    let other_brace = (if dir { ']' } else { '[' }) as u8;
+    let mut depth = 0;
+    let increment = incr(dir);
+    loop {
+        if inst[*ptr] == other_brace {
+            if depth == 0 {
+                return;
+            } else {
+                depth -= 1;
+            }
+        } else if inst[*ptr] == brace {
+            depth += 1;
+        }
+        increment(ptr);
+    }
+
+    fn incr(dir: bool) -> fn(ptr: &mut usize) {
+        if dir {
+            |p: &mut usize| {
+                *p += 1;
+            }
+        } else {
+            |p: &mut usize| {
+                *p -= 1;
+            }
+        }
     }
 }
