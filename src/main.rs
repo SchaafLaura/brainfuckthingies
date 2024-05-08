@@ -16,6 +16,20 @@ fn parse(instructions: String) {
 
     let inst: Vec<u8> = instructions.chars().map(|x| x as u8).collect();
 
+    /*
+    data += 1  // increments data at ptr
+    data -= 1  // decrements data at ptr
+
+    data >>= 1 // increments ptr
+    data <<= 1 // decrements ptr
+
+    data.print()
+    data.println()
+
+    data.read_key()?
+    or just read_key()?
+     */
+
     while inst_ptr < instructions.len() {
         match inst[inst_ptr] as char {
             '+' => data[data_ptr] += 1,
