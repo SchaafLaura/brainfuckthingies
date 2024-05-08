@@ -32,7 +32,6 @@ fn parse(instructions: String) {
                     jump(true, &mut inst_ptr, &inst)
                 }
             }
-
             ']' => {
                 if data != 0 {
                     jump(false, &mut inst_ptr, &inst)
@@ -54,13 +53,8 @@ fn parse(instructions: String) {
 }
 
 fn goto(dir: bool, func_id: u8, ptr: &mut usize, inst: &[u8]) {
-    let increment = incr(dir);
-    increment(ptr);
-    loop {
-        if inst[*ptr] == func_id {
-            return;
-        }
-        increment(ptr);
+    while inst[*ptr] != func_id {
+        incr(dir)(ptr);
     }
 }
 
