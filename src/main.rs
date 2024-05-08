@@ -34,13 +34,23 @@ fn parse(instructions: String) {
                     jump(false, &mut inst_ptr, &inst)
                 }
             }
-            _ => {}
+            _ => {
+                eprintln!(
+                    "unrecognized character in the input at {}: {}: `{}`",
+                    inst_ptr,
+                    inst[inst_ptr],
+                    whitespace_escape(inst[inst_ptr] as char)
+                );
+                // exit when encountering a wrong character?
+                // or ignore and continue?
+                // std::process::exit(1);
+            }
         }
         inst_ptr += 1
     }
 }
 
-fn jump(dir: bool, ptr: &mut usize, inst: &Vec<u8>) {
+fn jump(dir: bool, ptr: &mut usize, inst: &[u8]) {
     let brace = (if dir { '[' } else { ']' }) as u8;
     let other_brace = (if dir { ']' } else { '[' }) as u8;
     let mut depth = 0;
@@ -69,5 +79,23 @@ fn jump(dir: bool, ptr: &mut usize, inst: &Vec<u8>) {
                 *p -= 1;
             }
         }
+    }
+}
+
+fn whitespace_escape(c: char) -> String {
+    if c.is_ascii_whitespace() {
+        match c as u8 {
+            0 => "<null>",
+            10 | 15 => "<new_line>",
+            9 | 11 => "<tab>",
+            32 => "<space>",
+            _ => {
+                eprintln!("{}", c as u8);
+                unreachable!();
+            }
+        }
+        .to_string()
+    } else {
+        c.to_string()
     }
 }
