@@ -1,4 +1,6 @@
 mod data;
+
+use data::Data;
 use std::env;
 
 fn main() {
@@ -12,41 +14,26 @@ fn main() {
 }
 
 fn parse(instructions: String) {
-    let mut data: Vec<u8> = vec![0; 30_000];
-    let mut data_ptr: usize = 0;
+    let mut data = Data::new();
     let mut inst_ptr: usize = 0;
 
     let inst: Vec<u8> = instructions.chars().map(|x| x as u8).collect();
 
-    /*
-    data += 1  // increments data at ptr
-    data -= 1  // decrements data at ptr
-
-    data >>= 1 // increments ptr
-    data <<= 1 // decrements ptr
-
-    data.print()
-    data.println()
-
-    data.read_key()?
-    or just read_key()?
-     */
-
     while inst_ptr < instructions.len() {
         match inst[inst_ptr] as char {
-            '+' => data[data_ptr] += 1,
-            '-' => data[data_ptr] -= 1,
-            '>' => data_ptr += 1,
-            '<' => data_ptr -= 1,
-            '.' => print!("{}", data[data_ptr] as char),
+            '+' => data += 1,
+            '-' => data -= 1,
+            '>' => data >>= 1,
+            '<' => data <<= 1,
+            '.' => print!("{}", data),
             ',' => todo!(), // read user input
             '[' => {
-                if data[data_ptr] == 0 {
+                if data == 0 {
                     jump(true, &mut inst_ptr, &inst)
                 }
             }
             ']' => {
-                if data[data_ptr] != 0 {
+                if data != 0 {
                     jump(false, &mut inst_ptr, &inst)
                 }
             }
@@ -57,9 +44,6 @@ fn parse(instructions: String) {
                     inst[inst_ptr],
                     whitespace_escape(inst[inst_ptr] as char)
                 );
-                // exit when encountering a wrong character?
-                // or ignore and continue?
-                // std::process::exit(1);
             }
         }
         inst_ptr += 1
