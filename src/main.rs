@@ -40,12 +40,12 @@ fn parse(instructions: String) {
             '!' => goto(true, data.get(), &mut inst_ptr, &inst), // not in spec, but cool?
             '?' => goto(false, data.get(), &mut inst_ptr, &inst),
             _ => {
-                eprintln!(
+                /*eprintln!(
                     "unrecognized character in the input at {}: {}: `{}`",
                     inst_ptr,
                     inst[inst_ptr],
                     whitespace_escape(inst[inst_ptr] as char)
-                );
+                );*/
             }
         }
         inst_ptr += 1
@@ -90,6 +90,7 @@ fn incr(dir: bool) -> fn(ptr: &mut usize) {
     }
 }
 
+/*
 fn whitespace_escape(c: char) -> String {
     if c.is_ascii_whitespace() {
         match c as u8 {
@@ -107,3 +108,4 @@ fn whitespace_escape(c: char) -> String {
         c.to_string()
     }
 }
+*/
