@@ -9,19 +9,6 @@ fn main() {
     }
 }
 
-// brb
-
-/*
-> 	Increment the data pointer by one (to point to the next cell to the right).
-< 	Decrement the data pointer by one (to point to the next cell to the left).
-+ 	Increment the byte at the data pointer by one.
-- 	Decrement the byte at the data pointer by one.
-. 	Output the byte at the data pointer.
-, 	Accept one byte of input, storing its value in the byte at the data pointer.
-[ 	If the byte at the data pointer is zero, then instead of moving the instruction pointer forward to the next command, jump it forward to the command after the matching ] command.
-] 	If the byte at the data pointer is nonzero, then instead of moving the instruction pointer forward to the next command, jump it back to the command after the matching [ command.[a]
-*/
-
 fn parse(instructions: String) {
     let mut data: Vec<u8> = vec![0; 30_000];
     let mut data_ptr: usize = 0;
@@ -47,7 +34,7 @@ fn parse(instructions: String) {
                     jump(false, &mut inst_ptr, &inst)
                 }
             }
-            _ => todo!(),
+            _ => {}
         }
         inst_ptr += 1
     }
@@ -58,6 +45,7 @@ fn jump(dir: bool, ptr: &mut usize, inst: &Vec<u8>) {
     let other_brace = (if dir { ']' } else { '[' }) as u8;
     let mut depth = 0;
     let increment = incr(dir);
+    increment(ptr);
     loop {
         if inst[*ptr] == other_brace {
             if depth == 0 {
