@@ -32,11 +32,14 @@ fn parse(instructions: String) {
                     jump(true, &mut inst_ptr, &inst)
                 }
             }
+
             ']' => {
                 if data != 0 {
                     jump(false, &mut inst_ptr, &inst)
                 }
             }
+            '!' => goto(true, data.get(), &mut inst_ptr, &inst), // not in spec, but cool?
+            '?' => goto(false, data.get(), &mut inst_ptr, &inst),
             _ => {
                 eprintln!(
                     "unrecognized character in the input at {}: {}: `{}`",
@@ -47,6 +50,17 @@ fn parse(instructions: String) {
             }
         }
         inst_ptr += 1
+    }
+}
+
+fn goto(dir: bool, func_id: u8, ptr: &mut usize, inst: &[u8]) {
+    let increment = incr(dir);
+    increment(ptr);
+    loop {
+        if inst[*ptr] == func_id {
+            return;
+        }
+        increment(ptr);
     }
 }
 
@@ -68,16 +82,16 @@ fn jump(dir: bool, ptr: &mut usize, inst: &[u8]) {
         }
         increment(ptr);
     }
+}
 
-    fn incr(dir: bool) -> fn(ptr: &mut usize) {
-        if dir {
-            |p: &mut usize| {
-                *p += 1;
-            }
-        } else {
-            |p: &mut usize| {
-                *p -= 1;
-            }
+fn incr(dir: bool) -> fn(ptr: &mut usize) {
+    if dir {
+        |p: &mut usize| {
+            *p += 1;
+        }
+    } else {
+        |p: &mut usize| {
+            *p -= 1;
         }
     }
 }
