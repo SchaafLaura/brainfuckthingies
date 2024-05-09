@@ -34,20 +34,38 @@ fn parse(instructions: String) {
                     data.set(b);
                 }
 
-                // Test code:
-                // A,!Q>[B...-?]<>[C...--?]<
-                // expected behavior:
-                // when input is 'B' it prints "B" 3 times and goes back to the beginning
-                // when input is 'C' it prints "C" 3 times and goes back to the beginning
-                // when input is 'Q' the program exits
-                //
-                // actual behavior:
-                // when input is 'B' it crashes :(
-                // doesn't even print stuff, but that might be rust weirdness. It does jump back to the start
-                // but then skips the input and tries to jump to (13) - the ascii code for carriage return
+                /*
+                Test code: cargo run 'A,!Q>[B...-?]<'
 
-                /*todo!("get rid of carriage return (ascii code: 13) in stdin, it messes up the next input
-                or clear the stream or smthn..idfk :(");*/
+                expectecd behavior of program with input 'B':
+                    A                       // label (skipped)
+                    ,                       // read input 'B' and put it into data[0]
+                    !                       // jump forward until we hit 'B' instruction
+                    Q>[                     // skipped
+                    B                       // jump ends here and increments to next instruction
+                    ...                     // outputs data[0] ("B") three times
+                    -                       // decrement data[0] from 'B' to 'A'
+                    ?                       // jump backwards to label 'A'
+                    ]<                      // unimportant
+
+
+                    at this point the program should wait and read input again.
+                        if it receives 'B' again, the same should happen again
+                        if it receives 'Q' the program quits because everything gets skipped (works)
+
+
+                    actual behavor:
+                    inputting 'B' crashes as
+                        - program skips to label 'B'
+                        - (fails to print for some reason)
+                        - jumps back to label A
+                        - instead of waiting for input, it *thinks* there an input of 13 (carriage return)
+                        - tries skipping to get to instruction 13 (which doesn't exist)
+                        - runs out of bounds and crashes
+                 */
+
+                todo!("get rid of carriage return (ascii code: 13) in stdin, it messes up the next input
+                or clear the stream or smthn..idfk :(");
             }
             '[' => {
                 if data == 0 {
