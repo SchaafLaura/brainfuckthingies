@@ -35,19 +35,19 @@ fn parse(instructions: String) {
                 }
 
                 // Test code:
-                // A,!>[B...-?]<>[C...--?]<Z
+                // A,!Q>[B...-?]<>[C...--?]<
                 // expected behavior:
                 // when input is 'B' it prints "B" 3 times and goes back to the beginning
                 // when input is 'C' it prints "C" 3 times and goes back to the beginning
-                // when input is 'Z' the program exits
+                // when input is 'Q' the program exits
                 //
                 // actual behavior:
                 // when input is 'B' it crashes :(
                 // doesn't even print stuff, but that might be rust weirdness. It does jump back to the start
                 // but then skips the input and tries to jump to (13) - the ascii code for carriage return
 
-                todo!("get rid of carriage return (ascii code: 13) in stdin, it messes up the next input 
-                    or clear the stream or smthn..idfk :(");
+                /*todo!("get rid of carriage return (ascii code: 13) in stdin, it messes up the next input
+                or clear the stream or smthn..idfk :(");*/
             }
             '[' => {
                 if data == 0 {
