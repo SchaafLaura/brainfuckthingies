@@ -2,6 +2,7 @@ mod data;
 
 use data::Data;
 use std::env;
+use std::io::{self, Write};
 
 fn main() {
     let args: Vec<_> = env::args().collect();
@@ -26,18 +27,14 @@ fn parse(instructions: String) {
             '>' => data >>= 1,
             '<' => data <<= 1,
             '.' => {
-                use std::io::Write;
                 print!("{}", data);
                 std::io::stdout().flush().unwrap();
             }
             ',' => {
-                use std::io::Write;
                 println!();
-                std::io::stdout().flush().unwrap();
+                io::stdout().flush().unwrap();
                 let mut input = String::new();
-                std::io::stdin()
-                    .read_line(&mut input)
-                    .expect("Failed to read");
+                io::stdin().read_line(&mut input).expect("Failed to read");
                 data.set(input.chars().next().unwrap() as u8);
             }
             '[' => {
