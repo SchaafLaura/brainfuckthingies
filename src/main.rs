@@ -33,7 +33,16 @@ fn parse(instructions: String) {
                 if let Some(b) = input {
                     data.set(b);
                 }
-                todo!("get rid of carriage return in stdin, it messes up the next input or clear the stream or smthn..idfk :(");
+
+                // Test code:
+                // A,!>[B...-?]<>[C...--?]<Z
+                // expected behavior:
+                // when input is 'B' it prints "B" 3 times and goes back to the beginning
+                // when input is 'C' it prints "C" 3 times and goes back to the beginning
+                // when input is 'Z' the program exits
+
+                todo!("get rid of carriage return (ascii code: 13) in stdin, it messes up the next input 
+                    or clear the stream or smthn..idfk :(");
             }
             '[' => {
                 if data == 0 {
