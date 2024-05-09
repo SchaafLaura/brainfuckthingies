@@ -28,15 +28,13 @@ fn parse(instructions: String) {
             '.' => print!("{}", data),
             ',' => {
                 use std::io::Read;
-                let input = std::io::stdin()
-                    .bytes()
-                    .next()
-                    .and_then(|r| r.ok());
 
+                let input = std::io::stdin().bytes().next().and_then(|r| r.ok());
                 if let Some(b) = input {
                     data.set(b);
                 }
-            },
+                todo!("get rid of carriage return in stdin, it messes up the next input or clear the stream or smthn..idfk :(");
+            }
             '[' => {
                 if data == 0 {
                     jump(true, &mut inst_ptr, &inst)
@@ -63,9 +61,11 @@ fn parse(instructions: String) {
 }
 
 fn goto(dir: bool, func_id: u8, ptr: &mut usize, inst: &[u8]) {
+    println!("jumping to: {}", func_id);
     while inst[*ptr] != func_id {
         incr(dir)(ptr);
     }
+    println!("jumped successfully - ptr at: {}", ptr);
 }
 
 fn jump(dir: bool, ptr: &mut usize, inst: &[u8]) {
