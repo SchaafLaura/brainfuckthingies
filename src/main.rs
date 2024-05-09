@@ -29,43 +29,18 @@ fn parse(instructions: String) {
             ',' => {
                 use std::io::Read;
 
-                let input = std::io::stdin().bytes().next().and_then(|r| r.ok());
+                let input = std::io::stdin()
+                    .bytes()
+                    .inspect(|f| println!("{:?}", f))
+                    .find(|x| match x {
+                        Ok(y) => !matches!(*y as char, _ if y.is_ascii_whitespace()),
+                        Err(_) => false,
+                    })
+                    .and_then(|r| r.ok());
                 if let Some(b) = input {
+                    println!("{}", b);
                     data.set(b);
                 }
-
-                /*
-                Test code: cargo run 'A,!Q>[B...-?]<'
-
-                expectecd behavior of program with input 'B':
-                    A                       // label (skipped)
-                    ,                       // read input 'B' and put it into data[0]
-                    !                       // jump forward until we hit 'B' instruction
-                    Q>[                     // skipped
-                    B                       // jump ends here and increments to next instruction
-                    ...                     // outputs data[0] ("B") three times
-                    -                       // decrement data[0] from 'B' to 'A'
-                    ?                       // jump backwards to label 'A'
-                    ]<                      // unimportant
-
-
-                    at this point the program should wait and read input again.
-                        if it receives 'B' again, the same should happen again
-                        if it receives 'Q' the program quits because everything gets skipped (works)
-
-
-                    actual behavor:
-                    inputting 'B' crashes as
-                        - program skips to label 'B'
-                        - (fails to print for some reason)
-                        - jumps back to label A
-                        - instead of waiting for input, it *thinks* there an input of 13 (carriage return)
-                        - tries skipping to get to instruction 13 (which doesn't exist)
-                        - runs out of bounds and crashes
-                 */
-
-                todo!("get rid of carriage return (ascii code: 13) in stdin, it messes up the next input
-                or clear the stream or smthn..idfk :(");
             }
             '[' => {
                 if data == 0 {
