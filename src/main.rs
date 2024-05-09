@@ -25,22 +25,20 @@ fn parse(instructions: String) {
             '-' => data -= 1,
             '>' => data >>= 1,
             '<' => data <<= 1,
-            '.' => print!("{}", data),
+            '.' => {
+                use std::io::Write;
+                print!("{}", data);
+                std::io::stdout().flush().unwrap();
+            }
             ',' => {
-                use std::io::Read;
-
-                let input = std::io::stdin()
-                    .bytes()
-                    .inspect(|f| println!("{:?}", f))
-                    .find(|x| match x {
-                        Ok(y) => !matches!(*y as char, _ if y.is_ascii_whitespace()),
-                        Err(_) => false,
-                    })
-                    .and_then(|r| r.ok());
-                if let Some(b) = input {
-                    println!("{}", b);
-                    data.set(b);
-                }
+                use std::io::Write;
+                println!();
+                std::io::stdout().flush().unwrap();
+                let mut input = String::new();
+                std::io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read");
+                data.set(input.chars().next().unwrap() as u8);
             }
             '[' => {
                 if data == 0 {
@@ -68,11 +66,9 @@ fn parse(instructions: String) {
 }
 
 fn goto(dir: bool, func_id: u8, ptr: &mut usize, inst: &[u8]) {
-    println!("jumping to: {}", func_id);
     while inst[*ptr] != func_id {
         incr(dir)(ptr);
     }
-    println!("jumped successfully - ptr at: {}", ptr);
 }
 
 fn jump(dir: bool, ptr: &mut usize, inst: &[u8]) {
